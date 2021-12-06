@@ -24,7 +24,7 @@ jobs:
         with:
           type: tar
           filename: aws-console.tar.gz
-          exclusions: '*.git* workflows'
+          exclusions: '*.git*'
 
       - uses: ncipollo/release-action@v1
         with:
