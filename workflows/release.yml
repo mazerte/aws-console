@@ -1,0 +1,32 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: macos-11
+    steps:
+      # Checks-out repository under $GITHUB_WORKSPACE
+      - uses: actions/checkout@v2
+
+      - name: Extract version
+        id: extract-version
+        run: |
+          printf "::set-output name=%s::%s\n" tag-name "${GITHUB_REF#refs/tags/}"
+
+      - name: Install dependencies
+        run: |
+          pip install boto3
+
+      - uses: thedoctor0/zip-release@master
+        with:
+          type: tar
+          filename: aws-console.tar.gz
+          exclusions: '*.git* workflows'
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: aws-console.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}
