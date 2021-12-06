@@ -30,3 +30,15 @@ jobs:
         with:
           artifacts: aws-console.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: mislav/bump-homebrew-formula-action@v1
+        if: "!contains(github.ref, '-')" # skip prereleases
+        with:
+          formula-name: aws-console
+          formula-path: Formula/aws-console.rb
+          homebrew-tap: mazerte/homebrew-software
+          download-url: https://github.com/mazerte/aws-console/releases/download/${{ steps.extract-version.outputs.tag-name }}/aws-console.tar.gz
+          commit-message: |
+            {{formulaName}} {{version}}
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_COMMITTER_TOKEN }}
