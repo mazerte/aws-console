@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# https://gist.github.com/ottokruse/1c0f79d51cdaf82a3885f9b532df1ce5
 
 import json
 from urllib import parse, request
@@ -30,6 +31,8 @@ def open_console(service='console', region=None, profile_name=None, echo_to_stdo
   if config == None or config['expire_at'] < f'{datetime.now()}' or config['profile'] != profile_name or force:
     creds = sess.get_credentials()
     url_credentials = dict(sessionId=creds.access_key,sessionKey=creds.secret_key, sessionToken=creds.token)
+    if creds.token == None:
+      raise Exception("You can only assume role and not users")
 
     request_parameters = "?Action=getSigninToken"
     request_parameters += "&DurationSeconds=43200"
